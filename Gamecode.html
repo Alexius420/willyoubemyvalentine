@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>How Well Do You Know Me?</title>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(to right, #ff416c, #ff4b2b);
+            color: white;
+            text-align: center;
+            overflow-x: hidden;
+        }
+
+        .container {
+            margin-top: 80px;
+            padding: 20px;
+        }
+
+        button {
+            background: white;
+            color: #ff416c;
+            border: none;
+            padding: 12px 25px;
+            margin: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        button:hover {
+            background: #ffe6eb;
+        }
+
+        .option {
+            display: block;
+            margin: 10px auto;
+            width: 280px;
+        }
+
+        #quiz, #final-section {
+            display: none;
+        }
+
+        #score {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        input {
+            width: 60px;
+            height: 60px;
+            font-size: 28px;
+            text-align: center;
+            margin: 10px;
+            border-radius: 10px;
+            border: none;
+        }
+
+        .flip {
+            font-size: 70px;
+            margin-top: 30px;
+            animation: flip 1s forwards;
+        }
+
+        @keyframes flip {
+            0% { transform: rotateY(0); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        #yes-message {
+            margin-top: 25px;
+            font-size: 26px;
+        }
+
+        .heart {
+            position: fixed;
+            font-size: 24px;
+            animation: floatUp 3s linear forwards;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(-800px); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+
+    <h1 id="opening">How well do you know me?</h1>
+    <button id="startBtn" onclick="startQuiz()">Start Quiz</button>
+
+    <div id="quiz">
+        <div id="score">Score: 0 / 9</div>
+        <h2 id="question"></h2>
+        <div id="options"></div>
+        <button id="nextBtn" onclick="nextQuestion()" style="display:none;">Next</button>
+    </div>
+
+    <div id="final-section">
+        <h2>Final Challenge 💖</h2>
+        <p>Enter one character in each box:</p>
+
+        <input maxlength="1" id="c1">
+        <input maxlength="1" id="c2">
+        <input maxlength="1" id="c3"><br>
+
+        <button onclick="checkFinal()">Lock Answer</button>
+
+        <div id="final-display"></div>
+        <div id="yes-message"></div>
+    </div>
+
+</div>
+
+<script>
+    const questions = [
+        { q: "When was our first interaction?💋", options: ["In class","At KISA","At the carnival","Picnic"], correct: 2 },
+        { q: "When was our FIRST first date?😍", options: ["The 31st of January","The 22nd of December","The 7th of September","The 14th of February"], correct: 1 },
+        { q: "When is our anniversary?😘", options: ["31st of January","17th of March","22nd of July","17th of November"], correct: 0 },
+        { q: "What was the one thing that got you to even consider me in our 8th grade picnic?☀️", options: ["A teddy bear","My handsome as hell face","My name","A stolen flower"], correct: 3 },
+        { q: "What did we start doing in the hallways in 8th?🤗", options: ["Hold hands","Run around","Dance","Sing"], correct: 0 },
+        { q: "Whats the one thing you love about me the most?😎", options: ["My handsome face","My personality","My hands","My ass"], correct: 2 },
+        { q: "What did I wear on our FIRST first date?👄", options: ["A red polo and a jacket over it","White shirt","School uniform","Oversized tee"], correct: 0 },
+        { q: "What was the first ever ring I gave you made off?💍", options: ["Silver","Gold","Love","Bronze"], correct: 2 },
+        { q: "What do I love about you the most?🥰", options: ["You're beautiful heart","You're graceful soul","You're breathtaking face and body","All of the above"], correct: 3 }
+    ];
+
+    let current = 0;
+    let selectedAnswer = null;
+    let score = 0;
+
+    function startQuiz() {
+        document.getElementById("opening").style.display = "none";
+        document.getElementById("startBtn").style.display = "none";
+        document.getElementById("quiz").style.display = "block";
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        const question = questions[current];
+        document.getElementById("question").innerText = question.q;
+        const optionsDiv = document.getElementById("options");
+        optionsDiv.innerHTML = "";
+        selectedAnswer = null;
+        document.getElementById("nextBtn").style.display = "none";
+
+        question.options.forEach((opt, index) => {
+            const btn = document.createElement("button");
+            btn.innerText = opt;
+            btn.className = "option";
+            btn.onclick = () => selectOption(index, btn);
+            optionsDiv.appendChild(btn);
+        });
+    }
+
+    function selectOption(index, btn) {
+        selectedAnswer = index;
+        document.querySelectorAll(".option").forEach(b => b.style.background = "white");
+        btn.style.background = "#ffccd5";
+        document.getElementById("nextBtn").style.display = "inline-block";
+    }
+
+    function nextQuestion() {
+        if (selectedAnswer === questions[current].correct) {
+            score++;
+        }
+
+        current++;
+        document.getElementById("score").innerText = "Score: " + score + " / 9";
+
+        if (current < questions.length) {
+            loadQuestion();
+        } else {
+            document.getElementById("quiz").style.display = "none";
+            document.getElementById("final-section").style.display = "block";
+        }
+    }
+
+    function checkFinal() {
+        const c1 = document.getElementById("c1").value.toUpperCase();
+        const c2 = document.getElementById("c2").value;
+        const c3 = document.getElementById("c3").value.toUpperCase();
+
+        if (c1 === "Y" && c2 === "3" && c3 === "S") {
+
+            document.getElementById("final-display").innerHTML = "<div class='flip'>Y3S</div>";
+
+            setTimeout(() => {
+                document.getElementById("final-display").innerHTML = "<div class='flip'>YES</div>";
+                document.getElementById("yes-message").innerHTML =
+                    "Will you be my Valentine?❤️<br><br>You answered: YES";
+
+                launchCelebration();
+            }, 1000);
+
+        } else {
+            alert("Not quite 😘 Try again");
+        }
+    }
+
+    function launchCelebration() {
+        confetti({
+            particleCount: 200,
+            spread: 100,
+            origin: { y: 0.6 }
+        });
+
+        for (let i = 0; i < 40; i++) {
+            let heart = document.createElement("div");
+            heart.innerHTML = "❤️";
+            heart.className = "heart";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.bottom = "0px";
+            heart.style.fontSize = (20 + Math.random() * 20) + "px";
+            document.body.appendChild(heart);
+
+            setTimeout(() => heart.remove(), 3000);
+        }
+    }
+</script>
+
+</body>
+</html>
