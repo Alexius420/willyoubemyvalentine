@@ -1,47 +1,58 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>How Well Do You Know Me?</title>
+    <title>Before I Ask You Something Important... 💍</title>
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
     <style>
         body {
             margin: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(to right, #ff416c, #ff4b2b);
+            font-family: 'Georgia', serif;
             color: white;
             text-align: center;
             overflow-x: hidden;
+            background: linear-gradient(135deg, #3a1c71, #d76d77, #ffaf7b);
+            background-size: 400% 400%;
+            animation: romanticBG 12s ease infinite;
+        }
+
+        @keyframes romanticBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Sparkle overlay */
+        body::before {
+            content: "";
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 2px, transparent 2px);
+            background-size: 40px 40px;
+            animation: sparkle 4s linear infinite;
+            z-index: 0;
+        }
+
+        @keyframes sparkle {
+            from { transform: translateY(0); }
+            to { transform: translateY(-40px); }
         }
 
         .container {
             margin-top: 80px;
             padding: 20px;
+            position: relative;
+            z-index: 2;
         }
 
-        button {
-            background: white;
-            color: #ff416c;
-            border: none;
-            padding: 12px 25px;
-            margin: 10px;
-            font-size: 16px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: 0.3s;
+        h1 {
+            font-size: 48px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.8);
         }
 
-        button:hover {
-            background: #ffe6eb;
-        }
-
-        .option {
-            display: block;
-            margin: 10px auto;
-            width: 280px;
-        }
-
-        #quiz, #final-section {
-            display: none;
+        h2 {
+            font-size: 32px;
         }
 
         #score {
@@ -49,50 +60,95 @@
             margin-bottom: 20px;
         }
 
+        button {
+            background: white;
+            color: #d76d77;
+            border: none;
+            padding: 14px 30px;
+            margin: 10px;
+            font-size: 18px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        button:hover {
+            background: #ffe6eb;
+            transform: scale(1.05);
+        }
+
+        .option {
+            display: block;
+            margin: 10px auto;
+            width: 300px;
+        }
+
+        #quiz, #final-section, #proposal-section {
+            display: none;
+        }
+
         input {
-            width: 60px;
-            height: 60px;
-            font-size: 28px;
+            width: 70px;
+            height: 70px;
+            font-size: 32px;
             text-align: center;
             margin: 10px;
-            border-radius: 10px;
+            border-radius: 15px;
             border: none;
+            background: rgba(255,255,255,0.9);
+            color: #d76d77;
         }
 
-        .flip {
-            font-size: 70px;
-            margin-top: 30px;
-            animation: flip 1s forwards;
-        }
-
-        @keyframes flip {
-            0% { transform: rotateY(0); }
-            100% { transform: rotateY(360deg); }
-        }
-
-        #yes-message {
-            margin-top: 25px;
-            font-size: 26px;
-        }
-
-        .heart {
+        /* Rose petals */
+        .petal {
             position: fixed;
-            font-size: 24px;
-            animation: floatUp 3s linear forwards;
+            top: -20px;
+            font-size: 20px;
+            animation: fall 8s linear forwards;
+            z-index: 1;
         }
 
-        @keyframes floatUp {
-            0% { transform: translateY(0); opacity: 1; }
-            100% { transform: translateY(-800px); opacity: 0; }
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
         }
+
+        /* Giant YES */
+        #giantYES {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            font-size: 180px;
+            font-weight: bold;
+            color: white;
+            text-shadow:
+                0 0 20px #fff,
+                0 0 40px #ffaf7b,
+                0 0 60px #d76d77,
+                0 0 100px #ffaf7b;
+            z-index: 9999;
+            transition: transform 0.6s ease-out;
+        }
+
+        #proposal-section h2 {
+            font-size: 42px;
+            margin-top: 40px;
+            text-shadow: 0 0 20px rgba(255,255,255,0.9);
+        }
+
     </style>
 </head>
+
 <body>
 
 <div class="container">
 
-    <h1 id="opening">How well do you know me?</h1>
-    <button id="startBtn" onclick="startQuiz()">Start Quiz</button>
+    <h1 id="opening">Before I Ask You Something Important... 💍</h1>
+    <button id="startBtn" onclick="startQuiz()">Start</button>
 
     <div id="quiz">
         <div id="score">Score: 0 / 9</div>
@@ -102,126 +158,149 @@
     </div>
 
     <div id="final-section">
-        <h2>Final Challenge 💖</h2>
-        <p>Enter one character in each box:</p>
+        <h2>The Final Question... 💍</h2>
 
+        <p>1) What's the first letter of yellow?</p>
         <input maxlength="1" id="c1">
+
+        <p>2) What's 7 - 4?</p>
         <input maxlength="1" id="c2">
-        <input maxlength="1" id="c3"><br>
 
+        <p>3) What's the first letter of start?</p>
+        <input maxlength="1" id="c3">
+
+        <br><br>
         <button onclick="checkFinal()">Lock Answer</button>
+    </div>
 
-        <div id="final-display"></div>
-        <div id="yes-message"></div>
+    <!-- VALENTINE PROPOSAL SECTION -->
+    <div id="proposal-section">
+        <h2>Will you be my Valentine? 💌❤️</h2>
+        <button onclick="finalCelebration()">YES 💖</button>
     </div>
 
 </div>
 
 <script>
-    const questions = [
-        { q: "When was our first interaction?💋", options: ["In class","At KISA","At the carnival","Picnic"], correct: 2 },
-        { q: "When was our FIRST first date?😍", options: ["The 31st of January","The 22nd of December","The 7th of September","The 14th of February"], correct: 1 },
-        { q: "When is our anniversary?😘", options: ["31st of January","17th of March","22nd of July","17th of November"], correct: 0 },
-        { q: "What was the one thing that got you to even consider me in our 8th grade picnic?☀️", options: ["A teddy bear","My handsome as hell face","My name","A stolen flower"], correct: 3 },
-        { q: "What did we start doing in the hallways in 8th?🤗", options: ["Hold hands","Run around","Dance","Sing"], correct: 0 },
-        { q: "Whats the one thing you love about me the most?😎", options: ["My handsome face","My personality","My hands","My ass"], correct: 2 },
-        { q: "What did I wear on our FIRST first date?👄", options: ["A red polo and a jacket over it","White shirt","School uniform","Oversized tee"], correct: 0 },
-        { q: "What was the first ever ring I gave you made off?💍", options: ["Silver","Gold","Love","Bronze"], correct: 2 },
-        { q: "What do I love about you the most?🥰", options: ["You're beautiful heart","You're graceful soul","You're breathtaking face and body","All of the above"], correct: 3 }
-    ];
+const questions = [
+    { q: "When was our first interaction? 💋", options: ["In class","At KISA","At the carnival","Picnic"], correct: 2 },
+    { q: "When was our FIRST first date? 😍", options: ["The 31st of January","The 22nd of December","The 7th of September","The 14th of February"], correct: 1 },
+    { q: "When is our anniversary? 😘", options: ["31st of January","17th of March","22nd of July","17th of November"], correct: 0 },
+    { q: "What was the one thing that got you to even consider me in our 8th grade picnic? ☀️", options: ["A teddy bear","My handsome face","My name","A stolen flower"], correct: 3 },
+    { q: "What did we start doing in the hallways in 8th? 🤗", options: ["Hold hands","Run around","Dance","Sing"], correct: 0 },
+    { q: "Whats the one thing you love about me the most? 😎", options: ["My face","My personality","My hands","My smile"], correct: 2 },
+    { q: "What did I wear on our FIRST first date? 👄", options: ["A red polo and a jacket","White shirt","School uniform","Oversized tee"], correct: 0 },
+    { q: "What was the first ever ring I gave you made of? 💍", options: ["Silver","Gold","Love","Bronze"], correct: 2 },
+    { q: "What do I love about you the most? 🥰", options: ["Your heart","Your soul","Your smile","All of the above"], correct: 3 }
+];
 
-    let current = 0;
-    let selectedAnswer = null;
-    let score = 0;
+let current = 0;
+let score = 0;
 
-    function startQuiz() {
-        document.getElementById("opening").style.display = "none";
-        document.getElementById("startBtn").style.display = "none";
-        document.getElementById("quiz").style.display = "block";
+function startQuiz() {
+    document.getElementById("opening").style.display = "none";
+    document.getElementById("startBtn").style.display = "none";
+    document.getElementById("quiz").style.display = "block";
+    loadQuestion();
+}
+
+function loadQuestion() {
+    const question = questions[current];
+    document.getElementById("question").innerText = question.q;
+    const optionsDiv = document.getElementById("options");
+    optionsDiv.innerHTML = "";
+    document.getElementById("nextBtn").style.display = "none";
+
+    question.options.forEach((opt, index) => {
+        const btn = document.createElement("button");
+        btn.innerText = opt;
+        btn.className = "option";
+        btn.onclick = () => selectOption(index);
+        optionsDiv.appendChild(btn);
+    });
+}
+
+function selectOption(index) {
+    const correctIndex = questions[current].correct;
+    const buttons = document.querySelectorAll(".option");
+    buttons.forEach(btn => btn.disabled = true);
+
+    if (index === correctIndex) {
+        buttons[index].style.background = "#b4f8c8";
+        score++;
+    } else {
+        buttons[index].style.background = "#ffadad";
+        buttons[correctIndex].style.background = "#b4f8c8";
+    }
+
+    document.getElementById("nextBtn").style.display = "inline-block";
+}
+
+function nextQuestion() {
+    current++;
+    document.getElementById("score").innerText = "Score: " + score + " / 9";
+
+    if (current < questions.length) {
         loadQuestion();
+    } else {
+        document.getElementById("quiz").style.display = "none";
+        document.getElementById("final-section").style.display = "block";
     }
+}
 
-    function loadQuestion() {
-        const question = questions[current];
-        document.getElementById("question").innerText = question.q;
-        const optionsDiv = document.getElementById("options");
-        optionsDiv.innerHTML = "";
-        selectedAnswer = null;
-        document.getElementById("nextBtn").style.display = "none";
+function checkFinal() {
+    const c1 = document.getElementById("c1").value.toUpperCase();
+    const c2 = document.getElementById("c2").value;
+    const c3 = document.getElementById("c3").value.toUpperCase();
 
-        question.options.forEach((opt, index) => {
-            const btn = document.createElement("button");
-            btn.innerText = opt;
-            btn.className = "option";
-            btn.onclick = () => selectOption(index, btn);
-            optionsDiv.appendChild(btn);
-        });
+    if (c1 === "Y" && c2 === "3" && c3 === "S") {
+        explodeYES();
+    } else {
+        alert("The correct answers were: Y, 3, S 💕");
     }
+}
 
-    function selectOption(index, btn) {
-        selectedAnswer = index;
-        document.querySelectorAll(".option").forEach(b => b.style.background = "white");
-        btn.style.background = "#ffccd5";
-        document.getElementById("nextBtn").style.display = "inline-block";
-    }
+function explodeYES() {
+    const giant = document.createElement("div");
+    giant.id = "giantYES";
+    giant.innerText = "YES";
+    document.body.appendChild(giant);
 
-    function nextQuestion() {
-        if (selectedAnswer === questions[current].correct) {
-            score++;
-        }
+    setTimeout(() => {
+        giant.style.transform = "translate(-50%, -50%) scale(1.3)";
+    }, 50);
 
-        current++;
-        document.getElementById("score").innerText = "Score: " + score + " / 9";
+    confetti({
+        particleCount: 600,
+        spread: 180,
+        origin: { y: 0.6 }
+    });
 
-        if (current < questions.length) {
-            loadQuestion();
-        } else {
-            document.getElementById("quiz").style.display = "none";
-            document.getElementById("final-section").style.display = "block";
-        }
-    }
+    setTimeout(() => {
+        document.getElementById("final-section").style.display = "none";
+        document.getElementById("proposal-section").style.display = "block";
+    }, 2000);
+}
 
-    function checkFinal() {
-        const c1 = document.getElementById("c1").value.toUpperCase();
-        const c2 = document.getElementById("c2").value;
-        const c3 = document.getElementById("c3").value.toUpperCase();
+function finalCelebration() {
+    confetti({
+        particleCount: 800,
+        spread: 200,
+        origin: { y: 0.6 }
+    });
+}
 
-        if (c1 === "Y" && c2 === "3" && c3 === "S") {
+/* Falling Rose Petals */
+setInterval(() => {
+    let petal = document.createElement("div");
+    petal.innerHTML = "🌹";
+    petal.className = "petal";
+    petal.style.left = Math.random() * 100 + "vw";
+    petal.style.fontSize = (15 + Math.random() * 20) + "px";
+    document.body.appendChild(petal);
+    setTimeout(() => petal.remove(), 8000);
+}, 600);
 
-            document.getElementById("final-display").innerHTML = "<div class='flip'>Y3S</div>";
-
-            setTimeout(() => {
-                document.getElementById("final-display").innerHTML = "<div class='flip'>YES</div>";
-                document.getElementById("yes-message").innerHTML =
-                    "Will you be my Valentine?❤️<br><br>You answered: YES";
-
-                launchCelebration();
-            }, 1000);
-
-        } else {
-            alert("Not quite 😘 Try again");
-        }
-    }
-
-    function launchCelebration() {
-        confetti({
-            particleCount: 200,
-            spread: 100,
-            origin: { y: 0.6 }
-        });
-
-        for (let i = 0; i < 40; i++) {
-            let heart = document.createElement("div");
-            heart.innerHTML = "❤️";
-            heart.className = "heart";
-            heart.style.left = Math.random() * 100 + "vw";
-            heart.style.bottom = "0px";
-            heart.style.fontSize = (20 + Math.random() * 20) + "px";
-            document.body.appendChild(heart);
-
-            setTimeout(() => heart.remove(), 3000);
-        }
-    }
 </script>
 
 </body>
